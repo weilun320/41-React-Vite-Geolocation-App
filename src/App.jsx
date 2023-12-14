@@ -5,7 +5,7 @@ function App() {
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
-  useEffect(() => {
+  const getGeolocation = () => {
     const success = (position) => {
       setLatitude(position.coords.latitude);
       setLongitude(position.coords.longitude);
@@ -15,11 +15,19 @@ function App() {
 
     const option = {
       enableHighAccuracy: true,
-      timeout: 1000,
+      timeout: 5000,
       maximumAge: 0,
     };
 
     navigator.geolocation.getCurrentPosition(success, error, option);
+  };
+
+  useEffect(() => {
+    getGeolocation();
+
+    const timerId = setInterval(getGeolocation, 1000);
+
+    return () => clearInterval(timerId);
   });
 
   return (
